@@ -1,0 +1,11 @@
+- name: backup orient database
+  hosts: localhost
+  gather_facts: true
+  vars:
+    database: mygraphdatabase
+    admin_user: backup
+    admin_password: mypassword
+    orientdb_docker_name: orientdb
+    s3_bucket_name: awesomes3bucket
+  roles:
+    - orientbackup

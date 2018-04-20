@@ -1,0 +1,41 @@
+- name: stop orient container
+  docker_container:
+    name: {{ orientdb_docker_name }}
+    state: stopped
+  become: true
+
+# this is the backup location on my fysical drive, I mount this in my next docker command
+- name: copy backup script to orientdb directory
+  template:
+    src: backup.j2
+    dest: /orientdb/backup/backup.txt
+    mode: 0644
+    owner: root
+    group: root
+  become: true
+
+# run a temporary docker container from the official orientdb docker image
+- name: run docker command
+  command: >
+    docker run --rm -t
+    -v /orientdb/databases:/orientdb/databases
+    -v /orientdb/backup:/orientdb/bin/backup
+    orientdb
+    /orientdb/bin/console.sh /orientdb/bin/backup/backup.txt
+  become: true
+
+- name: start docker container again
+  docker_container:
+    name: {{ orientdb_docker_name }}
+    state: started
+  become: true
+
+- name: upload backup file to s3
+  command: aws s3 cp /orientdb/backup/{{ database }}-{{ ansible_date_time.iso8601 }}.zip s3://{{ s3s3_bucket_name}}/
+  become: true
+
+- name: remove backup file
+  file:
+    path: /orientdb/backup/{{ database }}-{{ ansible_date_time.iso8601 }}.zip
+    state: absent
+  become: true

@@ -1,0 +1,1 @@
+CONNECT plocal:/orientdb/databases/{{ database }} {{ admin_user }} '{{ admin_password }}'; freeze database; backup database /orientdb/bin/backup/{{ database }}-{{ ansible_date_time.iso8601 }}.zip; release database;
