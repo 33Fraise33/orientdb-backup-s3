@@ -15,13 +15,13 @@ I personally run this with a cronjob on my server. You can set the interval you 
 
 There are a few variables defined under site.yml, change them to suit your needs.
 
-## Alterations
+## Concept
 
 You could easily create an alternate version of this not running in docker.
 The concept is that you shutdown a server which is included in a distributed cluster. Afterwards you run a small
 backup script included under 'templates'. I use ansible facts to give the backup a unique name but you could also
 use bash dates for example.
-If you want to add something or add the non dockerized version of this make a PR!
+If you want to add something or add the a bash version of this make a PR!
 
 ## Backup Script
 
